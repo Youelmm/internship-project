@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class LaunchItem : MonoBehaviour
@@ -7,12 +8,15 @@ public class LaunchItem : MonoBehaviour
     private Vector2 endPosition; // Last-touch position
     private Vector2 direction; // Launch direction
     private float distance; // Distance between both positions
-    private bool canLaunch = false; // To check if player can launch
+    private bool canLaunch = true; // To check if player can launch
     private Rigidbody2D rb; // Item's rigid body
-    public float gravityScale = 1f;
+    public float gravityScale = 1f; // Item's gravity scale
+    public Vector2 itemInitialPosition; // Item's initial position when it is ready to be launched
 
     private void Start()
     {
+        // To set item's initial position
+        itemInitialPosition = transform.position;
         rb = GetComponent<Rigidbody2D>();
         // The item is immobile at each new launch
         rb.gravityScale = 0f;
@@ -20,15 +24,13 @@ public class LaunchItem : MonoBehaviour
 
     private void Update()
     {
-        print(gameObject.transform.position);
-        // Only with 1 finger
+        // Only possible with 1 finger
         if (Input.touchCount == 1)
         {
             Touch touch = Input.GetTouch(0);
-            if (touch.phase == TouchPhase.Began)
+            if (touch.phase == TouchPhase.Began && canLaunch)
             {
                 startPosition = touch.position;
-                canLaunch = true;
             }
             else if (touch.phase == TouchPhase.Moved)
             {
@@ -38,7 +40,7 @@ public class LaunchItem : MonoBehaviour
             }
             else if (touch.phase == TouchPhase.Ended && canLaunch)
             {
-                // Give the item its gravity back
+                // To give the item its gravity back
                 rb.gravityScale = gravityScale;
                 canLaunch = false;
                 Launch();
@@ -51,4 +53,25 @@ public class LaunchItem : MonoBehaviour
         rb.AddForce(-direction * distance * power);
     }
 
+    public void CanLaunch()
+    {
+        canLaunch = true;
+        MakeTheLaunchableItemImmobile();
+    }
+
+    private Vector2 GetInitialPosition()
+    {
+        // TODO
+        return new Vector2();
+    }
+
+    private void MakeTheLaunchableItemImmobile()
+    {
+        // To set the launchable item at its new initial position
+        transform.position = itemInitialPosition;
+        // And to make it immobile
+        rb.gravityScale = 0f;
+        rb.velocity = Vector2.zero;
+        rb.angularVelocity = 0f;
+    }
 }
