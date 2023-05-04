@@ -6,17 +6,24 @@ public class CheckHoopCrossing : MonoBehaviour
 {
     private bool hasEnteredTheHoopFromTheTop = false;
     private LaunchItem launchItem;
+    private GameObject launchableItem;
 
     private void Start()
     {
         launchItem = GameObject.FindGameObjectWithTag("LaunchableItem").GetComponent<LaunchItem>();
+        launchableItem = launchItem.gameObject;
     }
+
+    private void Update()
+    {
+        CheckIfTheLaunchableItemIsOut();
+    }
+
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.CompareTag("LaunchableItem"))
         {
             // To check if the launchable item is going through the hoop from the top
-            // TODO: to fix the bug when the launchable item collides the hoop right border
             if (other.transform.position.y > transform.position.y)
             {
                 hasEnteredTheHoopFromTheTop = true;
@@ -28,11 +35,18 @@ public class CheckHoopCrossing : MonoBehaviour
     {
         if (hasEnteredTheHoopFromTheTop)
         {
-            // TODO
+            // TODO: increase player's points
         }
-        // Reset the checking variable
-        hasEnteredTheHoopFromTheTop = false;
-        // Make the launch finished so as to be able to restart another one
-        launchItem.CanLaunch();
+    }
+
+    private void CheckIfTheLaunchableItemIsOut()
+    {
+        if (Camera.main.WorldToViewportPoint(launchableItem.transform.position).y < 0)
+        {
+            // Reset the checking
+            hasEnteredTheHoopFromTheTop = false;
+            // Make the launch possible
+            launchItem.CanLaunch();
+        }
     }
 }

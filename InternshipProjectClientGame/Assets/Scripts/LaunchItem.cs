@@ -69,9 +69,11 @@ public class LaunchItem : MonoBehaviour
     {
         // To set the launchable item at its new initial position
         transform.position = itemInitialPosition;
-        // And to make it immobile
+        // To make it immobile
         rb.gravityScale = 0f;
         rb.velocity = Vector2.zero;
         rb.angularVelocity = 0f;
+        // To reset its rotation values
+        transform.rotation = Quaternion.identity;
     }
 }
