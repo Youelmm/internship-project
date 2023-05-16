@@ -1,4 +1,5 @@
 using System;
+using System.Xml.Serialization;
 using UnityEngine;
 
 public class LaunchItem : MonoBehaviour
@@ -12,6 +13,8 @@ public class LaunchItem : MonoBehaviour
     private Rigidbody2D rb; // Item's rigid body
     public float gravityScale = 1f; // Item's gravity scale
     public Vector2 itemInitialPosition; // Item's initial position when it is ready to be launched
+    private Vector3 itemLastPosition; // To save item's last position to manage its bounciness
+    public int bounceForce = 10;
 
     private void Start()
     {
@@ -75,5 +78,26 @@ public class LaunchItem : MonoBehaviour
         rb.angularVelocity = 0f;
         // To reset its rotation values
         transform.rotation = Quaternion.identity;
+    }
+
+    private void OnCollisionEnter2D(Collision2D other)
+    {
+        Vector2 direction = transform.position - itemLastPosition;
+        direction.Normalize();
+
+        if (other.gameObject.name == "Left Collider" || other.gameObject.name == "Right Collider")
+        {
+            GetComponent<Rigidbody2D>().AddForce(direction * bounceForce, ForceMode2D.Impulse);
+        }
+        else
+        {
+            // If it is not a screen border, the bounce force will be weaker
+            GetComponent<Rigidbody2D>().AddForce(direction * (bounceForce - 3), ForceMode2D.Impulse);
+        }
+    }
+    private void FixedUpdate()
+    {
+        // To update item's last postition
+        itemLastPosition = transform.position;
     }
 }

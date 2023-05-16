@@ -35,7 +35,7 @@ public class CheckHoopCrossing : MonoBehaviour
     {
         if (hasEnteredTheHoopFromTheTop)
         {
-            // TODO: increase player's points
+            // TODO: to increase player's points
         }
     }
 
@@ -43,9 +43,9 @@ public class CheckHoopCrossing : MonoBehaviour
     {
         if (Camera.main.WorldToViewportPoint(launchableItem.transform.position).y < 0)
         {
-            // Reset the checking
+            // To reset the checking
             hasEnteredTheHoopFromTheTop = false;
-            // Make the launch possible
+            // To make the launch possible
             launchItem.CanLaunch();
         }
     }
