@@ -30,7 +30,6 @@ public class LaunchItem : MonoBehaviour
 
     private void Update()
     {
-        print(rb.velocity);
         // Only possible with 1 finger
         if (Input.touchCount == 1)
         {
@@ -99,7 +98,16 @@ public class LaunchItem : MonoBehaviour
         {
             float speed = rb.velocity.magnitude;
             Vector2 localDirection = Vector2.Reflect(rb.velocity.normalized, other.GetContact(0).normal);
-            rb.velocity = direction * speed * power * bounceForce;
+
+            // If the item is going down and hits a border then bounciness is not applied (otherwise it makes the item go down very fast)
+            if (itemLastPosition.y > rb.gameObject.transform.position.y)
+            {
+                rb.velocity = direction * speed * power;
+            }
+            else
+            {
+                rb.velocity = direction * speed * power * bounceForce;
+            }
             //rb.AddForce(direction * bounceForce, ForceMode2D.Impulse);
         }
     }
