@@ -2,9 +2,7 @@ var express = require('express')
 const {
     request
 } = require('http')
-
 var server = express()
-
 var game = null
 
 // Object representing a player

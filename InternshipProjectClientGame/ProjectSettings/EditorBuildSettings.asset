@@ -8,5 +8,15 @@ EditorBuildSettings:
   - enabled: 0
     path: 
     guid: 00000000000000000000000000000000
+  - enabled: 1
+    path: Assets/Scenes/HomeScene.unity
+    guid: eecb0b1a304bc2549af4232464e45c9f
+  - enabled: 1
+    path: Assets/Scenes/GameScene.unity
+    guid: 3fc8acdd13e6c734bafef6554d6fdbcd
+  - enabled: 1
+    path: Assets/Scenes/GameOverScene.unity
+    guid: 182ddfc727252e1489558dcf7ce084e2
   m_configObjects:
+    com.unity.adaptiveperformance.loader_settings: {fileID: 11400000, guid: edc563e51d49778419f667f24e4dca18, type: 2}
     com.unity.adaptiveperformance.simulator.provider_settings: {fileID: 11400000, guid: 969c91d34be14d74f9d5ddf7ba218904, type: 2}

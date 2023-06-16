@@ -10,13 +10,14 @@ public class LaunchItem : MonoBehaviour
     private Vector2 endPosition; // Last-touch position
     private Vector2 direction; // Launch direction
     private float distance; // Distance between both positions
-    private bool canLaunch = true; // To check if player can launch
+    public bool canLaunch = true; // To check if player can launch
     private Rigidbody2D rb; // Item's rigid body
     public float gravityScale = 1f; // Item's gravity scale
     public Vector2 itemInitialPosition; // Item's initial position when it is ready to be launched
     private Vector3 itemLastPosition; // To save item's last position to manage its bounciness
     public float bounceForce = 10;
     public float maximumTouchDistance = 10;
+    private CheckHoopCrossing checkHoopCrossing;
    
 
     private void Start()
@@ -26,6 +27,8 @@ public class LaunchItem : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         // The item is immobile at each new launch
         rb.gravityScale = 0f;
+        // To set the hoop crossing checker
+        checkHoopCrossing = GameObject.Find("Hoop").GetComponent<CheckHoopCrossing>();
     }
 
     private void Update()
@@ -62,7 +65,6 @@ public class LaunchItem : MonoBehaviour
     private void Launch()
     {
         rb.velocity = -direction * distance * power;
-        //rb.AddForce(-direction * distance * power);
     }
 
     public void CanLaunch()
@@ -79,7 +81,7 @@ public class LaunchItem : MonoBehaviour
 
     private void MakeTheLaunchableItemImmobile()
     {
-        // To set the launchable item at its new initial position
+        // TODO: To set the launchable item and the hoop their new initial position
         transform.position = itemInitialPosition;
         // To make it immobile
         rb.gravityScale = 0f;
@@ -96,6 +98,12 @@ public class LaunchItem : MonoBehaviour
 
         if (other.gameObject.name == "Left Collider" || other.gameObject.name == "Right Collider")
         {
+            // To add bonus points when the launchable item hits the screen borders before going through the hoop
+            if (!checkHoopCrossing.hasEnteredTheHoopFromTheTop)
+            {
+                checkHoopCrossing.screenBorderCollisionCount++;
+            }
+
             float speed = rb.velocity.magnitude;
             Vector2 localDirection = Vector2.Reflect(rb.velocity.normalized, other.GetContact(0).normal);
 
@@ -108,7 +116,6 @@ public class LaunchItem : MonoBehaviour
             {
                 rb.velocity = direction * speed * power * bounceForce;
             }
-            //rb.AddForce(direction * bounceForce, ForceMode2D.Impulse);
         }
     }
     private void FixedUpdate()
